@@ -9,9 +9,7 @@ sound_dir = path.join(path.dirname(__file__), 'Sound')
 
 #GLOBALNE VARIJABLE
 
-#POSTAVKE PROZORA I BROJ SLIČICA U SEKUNDI
-WIDTH = 1024
-HEIGHT = 768
+#BROJ SLIČICA U SEKUNDI
 FPS = 60
 
 #DEFINIRANJE BOJA
