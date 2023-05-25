@@ -7,12 +7,12 @@ from os import path
 assets_dir = path.join(path.dirname(__file__), 'Assets')
 sound_dir = path.join(path.dirname(__file__), 'Sound')
 
-#GLOBALNE VARIJABLE
+#GLOBAL VARIABLES
 
-#BROJ SLIČICA U SEKUNDI
+#FRAMES PER SECOND
 FPS = 60
 
-#DEFINIRANJE BOJA
+#DEFINING COLORS
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -20,7 +20,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
-#INICIJALIZACIJA PYGAME-A I STVARANJE PROZORA
+#PYGAME INIT AND WINDOW CREATION
 pygame.init()
 pygame.mixer.init()
 WIDTH, HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
@@ -30,7 +30,7 @@ clock = pygame.time.Clock()
 font_name = pygame.font.match_font('arial')
 
 
-#FUNKCIJE
+#FUNCTIONS
 
 def show_game_over_screen():
     draw_text(screen, "Space Shooter", 64, WIDTH/2, HEIGHT/4)
@@ -77,8 +77,8 @@ def newmob():
     all_sprites.add(m)
     mobs.add(m)
 
-#SPRITES KLASE
-#### KLASA PLAYER ####
+#SPRITES CLASSES
+#### CLASS PLAYER ####
 class Player(pygame.sprite.Sprite):
     def __init__(self):
 
@@ -87,7 +87,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.radius = 50 *1.3
-        #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 10
 
@@ -190,7 +189,6 @@ class Mob(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.radius = int(self.rect.width * 0.70 /2)
-        #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
 
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         self.rect.y = random.randrange(-200, -150)
@@ -309,7 +307,7 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect()
                 self.rect.center = center
 
-#KLASA POZADINA
+#BACKGROUND CLASS
 class Background():
       def __init__(self):
             self.bgimage = pygame.image.load(path.join(assets_dir, "back.png")).convert()
@@ -335,7 +333,7 @@ class Background():
          screen.blit(self.bgimage, (self.bgX1, self.bgY1))
          screen.blit(self.bgimage, (self.bgX2, self.bgY2))
 
-#UČITAVANJE ASSETA
+#ASSET LOADING
 
 player_img = pygame.image.load(path.join(assets_dir, "player_1.png")).convert()
 player_icon = pygame.transform.scale(player_img, ( 50, 50))
@@ -394,7 +392,7 @@ for i in range(9):
     img.set_colorkey(BLACK)
     explosion_anim['player'].append(img)
 
-#UČITAVANJE ZVUKOVA
+#SOUND LOADING
 explosion_sound = pygame.mixer.Sound(path.join(sound_dir, '8bit_bomb_explosion.wav'))
 
 shoot_sounds = []
@@ -436,7 +434,7 @@ while running:
             newmob()
 
     clock.tick(FPS)
-    ############################################### EVENTI ###################################################
+    ############################################### EVENTS ###################################################
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -447,7 +445,7 @@ while running:
     back_ground.render()
     all_sprites.update()
 
-    #PROVJERA JE LI PROJEKTIL POGODIO NEPRIJATELJA
+    #CHECKING IF THE PROJECTILE AND PLAYER SPRITE COLLIDED
 
     hits = pygame.sprite.groupcollide(mobs, bullets, False, True)
     for hit in hits:
@@ -473,7 +471,7 @@ while running:
             hit.kill()
             newmob()
             
-    #PROVJERA JE LI SE NEPRIJATELJ SUDARIO U IGRAČA
+    #CHECKING IF THE PROJECTILE AND ENEMY SPRITE COLLIDED
 
     hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
     
@@ -496,7 +494,7 @@ while running:
             player.lives -= 1
             player.shield = 100
     
-    #PROVJERA JE LI IGRAČ POKUPIO NADOGRANJU
+    #CHECKING IF THE PLAYER AND POWERUP SPRITES HAVE COLIDED
 
     hits = pygame.sprite.spritecollide(player, poweups, True)
     for hit in hits:
@@ -520,20 +518,20 @@ while running:
     if player.lives == 0 and not death_explosion.alive():
         game_over = True
 
-    #DODAVANJE VIŠE NEPRIJATELJA KAKO VRIJEME PROLAZI
+    #ADDING MORE ENEMIES AS TIME PASSES
 
     start_ticks += 1
     print(start_ticks)
     if start_ticks % 2700 == 0:
         newmob()
     
-    #CRTANJE SVIH SPRITEOVA NA ZASLON I GRAFIČKOG SUČELJA
+    #PLOTING ALL SPRITES AND GUI
     all_sprites.draw(screen)
     draw_text(screen, "SCORE: " + str(score), 42, WIDTH/2, 10)
     draw_shield_bar(screen ,5, 5, player.shield)
     draw_lives(screen, WIDTH - 200, 20, player.lives, player_icon)
 
-    #NAKON CRTANJA, "OKRENUTI" ZASLON
+    #FLIPPING THE DISPLAY AFTER PLOTING
     pygame.display.flip()
 
 pygame.quit()
