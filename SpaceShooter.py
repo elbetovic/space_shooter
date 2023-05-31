@@ -11,7 +11,6 @@ sound_dir = path.join(path.dirname(__file__), 'Sound')
 
 #FRAMES PER SECOND
 FPS = 60
-
 #DEFINING COLORS
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
